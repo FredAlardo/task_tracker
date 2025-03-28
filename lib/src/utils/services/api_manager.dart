@@ -1,9 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../models/todo_task_model.dart';
+import 'package:task_tracker/src/models/todo_definition.dart';
+import '../../models/todo_task.dart';
 
 /// A class to manage API interactions for the Todo application.
 class ApiManager {
+  // Factory method to return the instance
+  factory ApiManager() {
+    return _instance;
+  }
+  // Private constructor
+  ApiManager._();
+
+  // Static instance
+  static final ApiManager _instance = ApiManager._();
+
   static const String _baseUrl = 'https://my.api.mockaroo.com';
   static const String _apiKey = 'fac54c20';
 
@@ -61,14 +72,19 @@ class ApiManager {
   /// Retrieves the definition of actions available for todos.
   ///
   /// Returns a list of action definitions or null if no definitions are found.
-  Future<List<dynamic>?> getDefinition() async {
+  Future<List<TodoDefinition>?> getDefinition() async {
     final http.Response response = await _get('/todo/definition');
 
     if (response.body.isEmpty) {
       return null; // Return null if the response is empty
     }
 
-    return json.decode(response.body) as List<dynamic>;
+    final List<dynamic> jsonResponse =
+        json.decode(response.body) as List<dynamic>;
+    return jsonResponse
+        .map((dynamic json) =>
+            TodoDefinition.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   /// Performs an action on a todo.

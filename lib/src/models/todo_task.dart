@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
+import 'package:task_tracker/src/utils/enums.dart';
+
 /// Represents a task with various attributes related to its details and status.
+@immutable
 class TodoTask {
   /// Creates a new instance of [TodoTask].
-  TodoTask({
+  const TodoTask({
     required this.title,
     required this.id,
     required this.type,
@@ -18,15 +22,14 @@ class TodoTask {
   });
 
   /// Factory method to create a [TodoTask] from a JSON map.
-  ///
-  /// The [json] parameter is expected to contain the keys that match the
-  /// properties of the [TodoTask] class. This method will throw an error if
-  /// the required keys are not present in the JSON map.
   factory TodoTask.fromJson(Map<String, dynamic> json) {
     return TodoTask(
       title: json['title'] as String,
       id: json['id'] as String,
-      type: json['type'] as String,
+      type: TodoType.values.firstWhere(
+        (TodoType type) => type.name == json['type'] as String,
+        orElse: () => TodoType.TODO,
+      ),
       description: json['description'] as String,
       completed: json['completed'] as String,
       dueDate: json['due_date'] as String?,
@@ -47,7 +50,7 @@ class TodoTask {
   final String id;
 
   /// The type of the task (e.g., URGENT_TODO, ONLINE_MEETING).
-  final String type;
+  final TodoType type;
 
   /// A brief description of the task.
   final String description;
@@ -87,7 +90,7 @@ class TodoTask {
     return {
       'title': title,
       'id': id,
-      'type': type,
+      'type': type.toString(),
       'description': description,
       'completed': completed,
       'due_date': dueDate,

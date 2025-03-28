@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:task_tracker/src/models/todo_task_model.dart';
+import 'package:task_tracker/src/models/todo_task.dart';
 import 'package:task_tracker/src/utils/services/api_manager.dart';
 
 void main() {
